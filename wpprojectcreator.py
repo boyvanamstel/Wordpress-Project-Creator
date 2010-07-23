@@ -140,7 +140,7 @@ class WPProjectCreator(object):
 		
 		if(self.remote == None):
 			inputRemoteHost = raw_input('Enter the remote host (e.g. git.hostname.nl):')
-			inputRemoteProject = raw_input('Enter the remote project (e.g. example-project):')
+			inputRemoteProject = raw_input('Enter the remote project (e.g. example-wpcontent):')
 			
 			# Define patterns
 			patHostname = re.compile('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$', re.I)
