@@ -37,10 +37,10 @@ class WPProjectCreator(object):
 		self.projectName = ''
 		
 		# Proceed with downloading Wordpress
-		#self.getWordpress()
+		self.getWordpress()
 
 		# Extract afterwards
-		#self.extractWordpress()
+		self.extractWordpress()
 		
 		# Get git location
 		self.getGitLocation()
@@ -64,6 +64,9 @@ class WPProjectCreator(object):
 			sys.exit(2)
 
 	def getWordpress(self):
+		print ''
+		print '- Download Wordpress'
+		print ''
 		
 		if(os.path.isfile(os.path.join(self.dir, 'latest.zip'))):
 			# Latest exists, check if wordpress folder exists, else extract
@@ -86,8 +89,8 @@ class WPProjectCreator(object):
 					wordpress.close()
 					break
 				totalRead += chunk
-				sys.stdout.write('Downloading Wordpress %s' % progressChars[curChar])
-				sys.stdout.write('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b')
+				sys.stdout.write('Downloading.. %s' % progressChars[curChar])
+				sys.stdout.write('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b')
 				sys.stdout.flush()
 				curChar += 1
 				if(curChar >= len(progressChars)):
@@ -102,6 +105,9 @@ class WPProjectCreator(object):
 			return True
 	
 	def extractWordpress(self):
+		print ''
+		print '- Extract Wordpress'
+		print ''
 		
 		if(os.path.isdir(os.path.join(self.dir, 'wordpress'))):
 			# Wordpress folder exists, fail
@@ -128,6 +134,9 @@ class WPProjectCreator(object):
 			return True
 			
 	def getGitLocation(self):
+		print ''
+		print '- Define Git repository location'
+		print ''
 		
 		if(self.remote == None):
 			inputRemoteHost = raw_input('Enter the remote host (e.g. git.hostname.nl):')
@@ -156,7 +165,9 @@ class WPProjectCreator(object):
 			return True
 		
 	def createGitRepo(self):
+		print ''
 		print '- Create Git repository'
+		print ''
 		
 		if(os.path.isdir(os.path.join(self.dir, 'wordpress/wp-content'))):
 			
@@ -175,7 +186,6 @@ class WPProjectCreator(object):
 				os.system('git commit -m "initial import"')
 				os.system('git remote add origin %s' % self.remote)
 				os.system('git push origin master')
-				os.system('cd %s' % os.path.join(self.dir, 'wordpress/wp-content'))
 				
 				return True
 			else:
@@ -187,7 +197,9 @@ class WPProjectCreator(object):
 			return False
 		
 	def getGitRepo(self):
-		print '- Getting Git repository'
+		print ''
+		print '- Get Git repository'
+		print ''
 		
 		if(os.path.isdir(os.path.join(self.dir, 'wordpress'))):
 		
@@ -204,7 +216,6 @@ class WPProjectCreator(object):
 				os.system('rm -rf wp-content')
 				os.system('git clone %s' % self.remote)
 				os.system('mv %s wp-content' % self.projectName)
-				os.system('cd %s' % os.path.join(self.dir, 'wordpress/wp-content'))
 				
 				return True
 			else:
