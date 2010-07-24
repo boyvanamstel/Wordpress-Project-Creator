@@ -12,6 +12,7 @@ import os.path
 import re
 import urllib2
 import zipfile
+import shutil
 
 # Git
 sys.path.append("./wpprojectcreator")
@@ -133,7 +134,10 @@ class WPProjectCreator(object):
 					f = open(os.path.join(self.dir, name), 'wb')
 					f.write(wpZip.read(name))
 					f.close()
-				
+			
+			# Done extracting, remove zip file
+			os.remove(os.path.join(self.dir, 'latest.zip'))
+			
 			return True
 			
 	def getGitLocation(self):
@@ -216,10 +220,11 @@ class WPProjectCreator(object):
 
 			if(confirm == 'y'):
 				os.chdir(os.path.join(self.dir, 'wordpress'))
-				os.system('rm -rf wp-content')
+				#os.system('rm -rf wp-content')
+				shutil.rmtree(os.path.join(self.dir, 'wordpress/wp-content'))
 				os.system('git clone %s' % self.remote)
-				os.system('mv %s wp-content' % self.projectName)
-				
+				#os.system('mv %s wp-content' % self.projectName)
+				os.rename(os.path.join(self.dir, 'wordpress/%s' % self.projectName), os.path.join(self.dir, 'wordpress/wp-content'))
 				return True
 			else:
 				self.throwError('error', 'Project creation aborted')
