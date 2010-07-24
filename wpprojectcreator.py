@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010, Boy van Amstel / Tam Tam
+# Copyright 2010, Boy van Amstel
 # All rights reserved.
 #
 
@@ -47,10 +47,13 @@ class WPProjectCreator(object):
 		
 		# Run initial commands if new
 		if(self.new == 'y'):
-			print new
 			self.createGitRepo()
 		else:
 			self.getGitRepo()
+		
+		print ''
+		print 'DONE! - Use your webbrowser to install the database using the setup.php file'		
+		print ''
 			
 	def throwError(self, type, message, solution = None):
 		if(type == 'notice'):

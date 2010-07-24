@@ -1,0 +1,25 @@
+/* HTML5 tags */
+header, section, footer,
+aside, nav, article, figure {
+	display: block;
+}
+
+/**********
+*
+*	Defaults
+*
+**********/
+
+body {
+}
+
+dl, fieldset { width: 400px; }
+dt { width: 150px; }
+dd { width: 250px; }
+dt, dd {
+	float: left;
+}
+
+input[type=text],
+input[type=password] { width: 250px; }
+input[type=submit] { float: right; }
