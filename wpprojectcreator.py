@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2010, Boy van Amstel / Tam Tam
+# Copyright 2010, Boy van Amstel
 # All rights reserved.
 #
 
