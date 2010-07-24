@@ -11,15 +11,60 @@ aside, nav, article, figure {
 **********/
 
 body {
+	font-family: 'Arial';
+	color: #333;
+	background: #fff;
 }
 
-dl, fieldset { width: 400px; }
-dt { width: 150px; }
-dd { width: 250px; }
+h1 { font-size: 24px; }
+h2, input {font-size: 18px; }
+h1, h2, p { margin-bottom: 20px; }
+
+legend { font-weight: bold; height: 40px; line-height: 40px; }
+fieldset { margin-top: 20px; }
+
+#wrapper, dl, fieldset { width: 500px; }
+
+#wrapper {
+	padding: 20px;
+	background: #faf8ee;
+	margin: 20px auto;
+}
+
+dt { width: 100px; }
+dd { width: 400px; }
 dt, dd {
+	height: 40px;
+	line-height: 40px;
 	float: left;
 }
 
-input[type=text],
-input[type=password] { width: 250px; }
-input[type=submit] { float: right; }
+input, .log { border: #333 1px solid; }
+input[type=text] { 
+	width: 398px; 
+	line-height: 18px;
+}
+input[type=submit] { 
+	width: 100%;
+	height: 40px;
+	float: right; 
+	font-size: 24px;
+	background-color: #333;
+	color: #fff;
+	border: 0;
+}
+input[type=submit]:hover { background-color: #666; }
+
+.log {
+	background: #fff;
+	padding: 20px;
+	list-style: square;
+}
+.log li {
+	padding: 5px 0;
+	margin-left: 10px;
+	color: #00bb00;
+}
+.log .error {
+	color: #bb0000;
+}

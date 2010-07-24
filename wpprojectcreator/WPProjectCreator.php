@@ -6,10 +6,21 @@
  * @copyright 2010 All rights reserved
  */
 
+/**
+ * Wordpress Project Creator
+ * Creates database, wp-config.php and imports database dump
+ */
 class WPProjectCreator {
 
+	/**
+	 * Array for storing errors
+	 */
 	private $_errors = array();
 
+	/**
+	 * Constructor sets settings
+	 * @param array $settings
+	 */
 	public function __construct($settings = array()) {
 		
 		// Copy settings
@@ -17,10 +28,19 @@ class WPProjectCreator {
 		
 	}
 	
+	/**
+	 * Sets settings
+	 * @param array $settings
+	 */
 	public function setSettings($settings) {
 		$this->_settings = $settings;
 	}
 	
+	/**
+	 * Static method for getting the current URL
+	 * @param bool $stripFile
+	 * @return string
+	 */
 	public static function getCurrentPageURL($stripFile = false) {
 		$pageURL = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://';
 		
@@ -30,10 +50,18 @@ class WPProjectCreator {
 		return $pageURL;
 	}
 	
+	/**
+	 * Get array with errors
+	 * @return array
+	 */
 	public function getErrors() {
 		return $this->_errors;
 	}
 	
+	/**
+	 * Create database connection
+	 * @return bool
+	 */
 	public function createDBConnection() {
 		if($this->_link = mysql_connect($this->_settings['db_host'], $this->_settings['db_username'], $this->_settings['db_password'])) {
 			return true;
@@ -41,6 +69,11 @@ class WPProjectCreator {
 		return false;
 	}
 	
+	/**
+	 * Create empty database
+	 * Removes old tables, or creates new database
+	 * @return bool
+	 */
 	public function createEmptyDatabase() {
 
 		$link = $this->_link;
@@ -77,14 +110,18 @@ class WPProjectCreator {
 			return $succeeded;
 		}	
 	}
-	
+
+	/**
+	 * Imports tables from SQL dump
+	 * @return bool
+	 */
 	public function importDatabase() {
 		
 		$file = $this->_settings['db_dump'];
 		$link = $this->_link;
 		$url = $this->_settings['wp_url'];
 		
-		// Read file
+		// Read database dump
 		$lines = @file($file); 
 		
 		if(!$lines) { 
@@ -138,6 +175,128 @@ class WPProjectCreator {
 		// Operation succeeded
 		return true; 		
 
+	}
+
+	/**
+	 * Creates wp-config.php from wp-config-sample.php
+	 * @return bool
+	 */
+	public function createWPConfig() {
+	
+		if(!file_exists('wordpress/wp-config-sample.php')) return false;
+	
+		$settings = $this->_settings;
+	
+		// Read sample config file
+		$lines = @file('wordpress/wp-config-sample.php'); 
+		
+		if(!$lines) { 
+			$this->_errors[] = sprintf('Can not open file \'%s\'', $file); 
+			return false; 
+		} 
+
+		// Create final config file		
+		$handle = fopen('wordpress/wp-config.php', 'w');
+
+		// Get secret keys
+		$secretKeys = file('https://api.wordpress.org/secret-key/1.1/salt/');
+		
+		// Read file, paste variables and save
+		foreach($lines as $line) { 
+			
+			$find = array(
+				"/define\(\'DB_NAME\'\, \'[a-zA-Z09\-\_]{1,}\'\)\;/",
+				"/define\(\'DB_USER\'\, \'[a-zA-Z09\-\_]{1,}\'\)\;/",
+				"/define\(\'DB_PASSWORD\'\, \'[a-zA-Z09\-\_]{1,}\'\)\;/",
+				"/define\(\'DB_HOST\'\, \'[a-zA-Z09\-\_]{1,}\'\)\;/",
+				"/define\(\'AUTH_KEY\'\,         \'put your unique phrase here\'\)\;/",
+				"/define\(\'SECURE_AUTH_KEY\'\,  \'put your unique phrase here\'\)\;/",
+				"/define\(\'LOGGED_IN_KEY\'\,    \'put your unique phrase here\'\)\;/",
+				"/define\(\'NONCE_KEY\'\,        \'put your unique phrase here\'\)\;/",
+				"/define\(\'AUTH_SALT\'\,        \'put your unique phrase here\'\)\;/",
+				"/define\(\'SECURE_AUTH_SALT\'\, \'put your unique phrase here\'\)\;/",
+				"/define\(\'LOGGED_IN_SALT\'\,   \'put your unique phrase here\'\)\;/",
+				"/define\(\'NONCE_SALT\'\,       \'put your unique phrase here\'\)\;/"
+				);
+
+			$replace = array(
+				sprintf("define('DB_NAME', '%s');", $settings['db_name']),
+				sprintf("define('DB_USER', '%s');", $settings['db_username']),
+				sprintf("define('DB_PASSWORD', '%s');", $settings['db_password']),
+				sprintf("define('DB_HOST', '%s');", $settings['db_host']),
+				$secretKeys[0],
+				$secretKeys[1],
+				$secretKeys[2],
+				$secretKeys[3],
+				$secretKeys[4],
+				$secretKeys[5],
+				$secretKeys[6],
+				$secretKeys[7]				
+				);
+				
+			// Write to file
+			fwrite($handle, preg_replace($find, $replace, $line));
+	
+		} 
+		
+		// Close file
+		fclose($handle);
+		
+		return true;
+	}
+
+	public function createHTAccess() {
+		
+		// Open file
+		$handle = fopen('wordpress/.htaccess', 'w');
+		
+		// Set content
+		$content = '
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /TamTam/nsw-wordpressprojectcreator/wordpress/
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /TamTam/nsw-wordpressprojectcreator/wordpress/index.php [L]
+</IfModule>
+
+# END WordPress
+';
+		
+		// Write content
+		fwrite($handle, $content);
+		
+		// Close file
+		fclose($handle);
+
+		return true;
+		
+	}
+
+	/**
+	 * Read existing wp-config.php
+	 * @return array
+	 */
+	public static function readWPConfig() {
+		
+		// Open existing config file	
+		$handle = fopen('wordpress/wp-config.php', 'r');
+		
+		// Read contents
+		$contents = fread($handle, filesize('wordpress/wp-config.php'));
+		
+		// Get database name
+		preg_match_all("/(define\(\'(DB_NAME|DB_USER|DB_PASSWORD|DB_HOST)\'\, \'(([a-zA-Z09\-\_]{1,}?))\'\)\;)/", $contents, $matches);
+		
+		return array(
+			"db_name" => $matches[3][0],
+			"db_username" => $matches[3][1],
+			"db_password" => $matches[3][2],
+			"db_host" => $matches[3][3]
+			);		
+	
 	}
 
 }
