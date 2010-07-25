@@ -15,8 +15,8 @@ import zipfile
 import shutil
 
 # Git
-sys.path.append("./wpprojectcreator")
-from git import *
+#sys.path.append("./wpprojectcreator")
+#from git import *
 
 # Project creator class
 class WPProjectCreator(object):
