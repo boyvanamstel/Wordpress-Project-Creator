@@ -10,7 +10,10 @@ import sys
 import os
 import os.path
 import re
-import urllib
+try:
+	import urllib.request
+except:
+	import urllib
 import zipfile
 import shutil
 
@@ -67,6 +70,13 @@ class WPProjectCreator(object):
 				print('= SOLUTION	: %s' % solution)
 			sys.exit(2)
 
+	def retrieving(self, count, blockSize = 0, totalSize = 0):
+		curChar = count % 8
+		progressChars = ['-','\\','|','/','-','\\','|','/']
+		sys.stdout.write('Downloading.. %s' % progressChars[curChar])
+		sys.stdout.write('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b')
+		sys.stdout.flush()
+
 	def getWordpress(self):
 		print('')
 		print('- Download Wordpress')
@@ -81,29 +91,29 @@ class WPProjectCreator(object):
 
 		else:
 			
-			wordpress = urllib.urlopen('http://wordpress.org/latest.zip')
-			output = open(os.path.join(self.dir, 'latest.zip'),'wb')
-			chunkSize = 1024
-			totalRead = ''
-			progressChars = ['-','\\','|','/','-','\\','|','/']
-			curChar = 0
-			while True:
-				chunk = wordpress.read(chunkSize)
-				if not chunk: 
-					wordpress.close()
-					break
-				totalRead += chunk
-				sys.stdout.write('Downloading.. %s' % progressChars[curChar])
-				sys.stdout.write('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b')
-				sys.stdout.flush()
-				curChar += 1
-				if(curChar >= len(progressChars)):
-					curChar = 0
-				#yield chunk			
-
-			output.write(totalRead)
-			output.close()
+			try:
+				wordpress = urllib.request.urlretrieve('http://wordpress.org/latest.zip', os.path.join(self.dir, 'latest.zip'), self.retrieving)
+				return True
+				
+			except:
+				wordpress = urllib.urlopen('http://wordpress.org/latest.zip')
 			
+				output = open(os.path.join(self.dir, 'latest.zip'),'wb')
+				chunkSize = 1024
+				totalRead = ''
+				counter = 0
+				while True:
+					chunk = wordpress.read(chunkSize)
+					if not chunk: 
+						wordpress.close()
+						break
+					totalRead += chunk
+					self.retrieving(counter, chunkSize)
+					counter += 1
+	
+				output.write(totalRead)
+				output.close()
+				
 			print('Downloaded latest Wordpress archive')
 			
 			return True
@@ -146,8 +156,17 @@ class WPProjectCreator(object):
 		print('')
 		
 		if(self.remote == None):
-			inputRemoteHost = raw_input('Enter the remote host (e.g. git.hostname.nl):')
-			inputRemoteProject = raw_input('Enter the remote project (e.g. example-wpcontent):')
+			question = 'Enter the remote host (e.g. git.hostname.nl):'
+			try:
+				inputRemoteHost = raw_input(question)
+			except:
+				inputRemoteHost = input(question)
+			
+			question = 'Enter the remote project (e.g. example-wpcontent):'
+			try:
+				inputRemoteProject = raw_input(question)
+			except:
+				inputRemoteProject = input(question)
 			
 			# Define patterns
 			patHostname = re.compile('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$', re.I)
@@ -158,7 +177,11 @@ class WPProjectCreator(object):
 			mProject = patProject.match(inputRemoteProject)
 			
 			if(mHostname and mProject):
-				inputConfirm = raw_input('We\'ll use this remote: git@%s:%s.git [y/n]' % (inputRemoteHost, inputRemoteProject))
+				question = 'We\'ll use this remote: git@%s:%s.git [y/n]' % (inputRemoteHost, inputRemoteProject)
+				try:
+					inputConfirm = raw_input(question)
+				except:
+					inputConfirm = input(question)
 				
 				if(inputConfirm != 'y'):
 					self.getGitLocation()
@@ -184,7 +207,12 @@ class WPProjectCreator(object):
 			print('git commit -m "initial import"')
 			print('git remote add origin %s' % self.remote)
 			print('git push origin master')
-			confirm = raw_input('Run commands? [y/n]')
+			
+			question = 'Run commands? [y/n]'
+			try:
+				confirm = raw_input(question)
+			except:
+				confirm = input(question)
 			
 			if(confirm == 'y'):
 				os.chdir(os.path.join(self.dir, 'wordpress/wp-content'))
@@ -216,7 +244,12 @@ class WPProjectCreator(object):
 			print('rm -rf wp-content')
 			print('git clone %s' % self.remote)
 			print('mv %s wp-content' % self.projectName)
-			confirm = raw_input('Run commands? [y/n]')
+			
+			question = 'Run commands? [y/n]'
+			try:
+				confirm = raw_input(question)
+			except:
+				confirm = input(question)
 
 			if(confirm == 'y'):
 				os.chdir(os.path.join(self.dir, 'wordpress'))
