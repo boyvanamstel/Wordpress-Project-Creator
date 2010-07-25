@@ -144,8 +144,6 @@ class WPProjectCreator {
 					preg_match($regex, $line, $matches);
 					if(isset($matches['url'])) $originalUrl = $matches['url'];
 				}
-				$line = str_replace($originalUrl, $url, $line);
-
 				$query .= "\n".$line; 
 				
 				if(substr($line, -1) == ';') {
@@ -166,7 +164,7 @@ class WPProjectCreator {
 		foreach($queries as $query) { 
 			//$query = trim($query);
 			if($query == "") { continue; }
-			if(!mysql_query($query.';', $link)) {
+			if(!mysql_query(str_replace($originalUrl, $url, $query).';', $link)) {
 				$this->_errors[] = sprintf('Query \'%s\' failed: %s', $query, mysql_error());
 				return false; 
 			} 
