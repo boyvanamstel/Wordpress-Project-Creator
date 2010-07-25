@@ -30,7 +30,7 @@ class WPProjectCreator(object):
 		else:
 			self.dir = dir	
 		
-		print 'Current working dir: %s' % self.dir
+		print('Current working dir: %s' % self.dir)
 		
 		# Properties
 		self.new = new
@@ -52,25 +52,25 @@ class WPProjectCreator(object):
 		else:
 			self.getGitRepo()
 		
-		print ''
-		print 'DONE! - Use your webbrowser to install the database using the setup.php file'		
-		print ''
+		print('')
+		print('DONE! - Use your webbrowser to install the database using the setup.php file')
+		print('')
 			
 	def throwError(self, type, message, solution = None):
 		if(type == 'notice'):
-			print '= NOTICE	: %s' % message
+			print('= NOTICE	: %s' % message)
 		if(type == 'warning'):
-			print '= WARNING	: %s' % message
+			print('= WARNING	: %s' % message)
 		if(type == 'error'):
-			print '= ERROR		: %s' % message
+			print('= ERROR		: %s' % message)
 			if(solution != None):
-				print '= SOLUTION	: %s' % solution
+				print('= SOLUTION	: %s' % solution)
 			sys.exit(2)
 
 	def getWordpress(self):
-		print ''
-		print '- Download Wordpress'
-		print ''
+		print('')
+		print('- Download Wordpress')
+		print('')
 		
 		if(os.path.isfile(os.path.join(self.dir, 'latest.zip'))):
 			# Latest exists, check if wordpress folder exists, else extract
@@ -104,14 +104,14 @@ class WPProjectCreator(object):
 			output.write(totalRead)
 			output.close()
 			
-			print 'Downloaded latest Wordpress archive'
+			print('Downloaded latest Wordpress archive')
 			
 			return True
 	
 	def extractWordpress(self):
-		print ''
-		print '- Extract Wordpress'
-		print ''
+		print('')
+		print('- Extract Wordpress')
+		print('')
 		
 		if(os.path.isdir(os.path.join(self.dir, 'wordpress'))):
 			# Wordpress folder exists, fail
@@ -127,10 +127,10 @@ class WPProjectCreator(object):
 				curItem = os.path.join(self.dir, name)
 			
 				if name.endswith('/') and not os.path.exists(curItem):
-					print 'Creating dir %s' % name
+					print('Creating dir %s' % name)
 					os.mkdir(curItem)
 				else:
-					print 'Extracting %s' % name
+					print('Extracting %s' % name)
 					f = open(os.path.join(self.dir, name), 'wb')
 					f.write(wpZip.read(name))
 					f.close()
@@ -141,9 +141,9 @@ class WPProjectCreator(object):
 			return True
 			
 	def getGitLocation(self):
-		print ''
-		print '- Define Git repository location'
-		print ''
+		print('')
+		print('- Define Git repository location')
+		print('')
 		
 		if(self.remote == None):
 			inputRemoteHost = raw_input('Enter the remote host (e.g. git.hostname.nl):')
@@ -172,18 +172,18 @@ class WPProjectCreator(object):
 			return True
 		
 	def createGitRepo(self):
-		print ''
-		print '- Create Git repository'
-		print ''
+		print('')
+		print('- Create Git repository')
+		print('')
 		
 		if(os.path.isdir(os.path.join(self.dir, 'wordpress/wp-content'))):
 			
-			print 'cd wordpress/wpcontent'
-			print 'git init'
-			print 'git add .'
-			print 'git commit -m "initial import"'
-			print 'git remote add origin %s' % self.remote
-			print 'git push origin master'
+			print('cd wordpress/wpcontent')
+			print('git init')
+			print('git add .')
+			print('git commit -m "initial import"')
+			print('git remote add origin %s' % self.remote)
+			print('git push origin master')
 			confirm = raw_input('Run commands? [y/n]')
 			
 			if(confirm == 'y'):
@@ -204,18 +204,18 @@ class WPProjectCreator(object):
 			return False
 		
 	def getGitRepo(self):
-		print ''
-		print '- Get Git repository'
-		print ''
+		print('')
+		print('- Get Git repository')
+		print('')
 		
 		if(os.path.isdir(os.path.join(self.dir, 'wordpress'))):
 		
 			os.chdir(os.path.join(self.dir, 'wordpress'))
 			
-			print 'cd wordpress'
-			print 'rm -rf wp-content'
-			print 'git clone %s' % self.remote
-			print 'mv %s wp-content' % self.projectName
+			print('cd wordpress')
+			print('rm -rf wp-content')
+			print('git clone %s' % self.remote)
+			print('mv %s wp-content' % self.projectName)
 			confirm = raw_input('Run commands? [y/n]')
 
 			if(confirm == 'y'):
@@ -241,14 +241,14 @@ def main():
 		args = sys.argv
 		opts, args = getopt.getopt(args[1:], 'd:n:r:', ['dir=','new=','remote=']) 
 	except getopt.GetoptError:           
-		print 'usage: python wpprojectcreator.py [--dir] [--username] [--password] [--key] [--id]\n'
-		print '-d, --dir'
-		print '		Directory to create the project in [.]'
-		print '-n, --new'
-		print '		Indicate this is an new project [n]'
-		print '-r, --remote'
-		print '		Remote location [git@git.hostname.nl:example.git]'
-		print ''
+		print('usage: python wpprojectcreator.py [--dir] [--username] [--password] [--key] [--id]\n')
+		print('-d, --dir')
+		print('		Directory to create the project in [.]')
+		print('-n, --new')
+		print('		Indicate this is an new project [n]')
+		print('-r, --remote')
+		print('		Remote location [git@git.hostname.nl:example.git]')
+		print('')
 		sys.exit(2)
 	
 	dir = None
