@@ -49,6 +49,15 @@ class WPProjectCreator {
 		$pageURL .= $_SERVER['SERVER_PORT'] != '80' ? $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$requestURI : $_SERVER['SERVER_NAME'] . $requestURI;
 		return $pageURL;
 	}
+
+	/**
+	 * Static method for getting the current rewrite base
+	 * @param bool $stripFile
+	 * @return string
+	 */
+	public static function getCurrentRewriteBase() {
+		return substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/')) . '/wordpress/';
+	}
 	
 	/**
 	 * Get array with errors
@@ -140,7 +149,7 @@ class WPProjectCreator {
 			if(!ereg('^--', $line)) { 
 				// Find original url, or replace if already found
 				if($originalUrl == '') {
-					$regex = "/INSERT INTO \`wp_options\` VALUES\([0-9]{0,}\, 0\, \'home\'\, \'(?P<url>[a-zA-Z0-9\:\-\.\/]{0,})\'\, \'[a-z]{2,3}\'\)\;/";
+					$regex = "/\, \'home\'\, \'(?P<url>[a-zA-Z0-9\:\-\.\/]{0,})\'\, \'[a-z]{2,3}\'\)/";
 					preg_match($regex, $line, $matches);
 					if(isset($matches['url'])) $originalUrl = $matches['url'];
 				}
@@ -253,18 +262,18 @@ class WPProjectCreator {
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
 RewriteEngine On
-RewriteBase /TamTam/nsw-wordpressprojectcreator/wordpress/
+RewriteBase [rewritebase]
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /TamTam/nsw-wordpressprojectcreator/wordpress/index.php [L]
+RewriteRule . [rewritebase]/index.php [L]
 </IfModule>
 
 # END WordPress
 ';
 		
 		// Write content
-		fwrite($handle, $content);
+		fwrite($handle, str_replace('[rewritebase]', $this->getCurrentRewriteBase(), $content));
 		
 		// Close file
 		fclose($handle);
