@@ -18,7 +18,7 @@ import zipfile
 import shutil
 
 # Git
-#sys.path.append("./wpprojectcreator")
+#sys.path.append(os.path.join(os.getcwd(), 'wpprojectcreator'))
 #from git import *
 
 # Project creator class
