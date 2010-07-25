@@ -136,7 +136,7 @@ class WPProjectCreator(object):
 					f.close()
 			
 			# Done extracting, remove zip file
-			os.remove(os.path.join(self.dir, 'latest.zip'))
+			#os.remove(os.path.join(self.dir, 'latest.zip'))
 			
 			return True
 			
