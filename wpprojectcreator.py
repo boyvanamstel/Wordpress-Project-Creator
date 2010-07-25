@@ -10,7 +10,7 @@ import sys
 import os
 import os.path
 import re
-import urllib2
+import urllib
 import zipfile
 import shutil
 
@@ -81,7 +81,7 @@ class WPProjectCreator(object):
 
 		else:
 			
-			wordpress = urllib2.urlopen('http://wordpress.org/latest.zip')
+			wordpress = urllib.urlopen('http://wordpress.org/latest.zip')
 			output = open(os.path.join(self.dir, 'latest.zip'),'wb')
 			chunkSize = 1024
 			totalRead = ''
