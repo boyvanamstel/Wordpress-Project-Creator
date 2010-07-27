@@ -173,7 +173,7 @@ class WPProjectCreator {
 		foreach($queries as $query) { 
 			//$query = trim($query);
 			if($query == "") { continue; }
-			if(!mysql_query(str_replace($originalUrl, urldecode($url), $query).';', $link)) {
+			if(!mysql_query(str_replace($originalUrl, $url, $query).';', $link)) {
 				$this->_errors[] = sprintf('Query \'%s\' failed: %s', $query, mysql_error());
 				return false; 
 			} 
