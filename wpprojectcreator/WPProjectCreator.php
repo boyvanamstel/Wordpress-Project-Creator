@@ -146,10 +146,10 @@ class WPProjectCreator {
 			$line = trim($line); 
 			
 			// Strip comments
-			if(!ereg('^--', $line)) { 
+			if(!preg_match('/^--/', $line)) { 
 				// Find original url, or replace if already found
 				if($originalUrl == '') {
-					$regex = "/\, \'home\'\, \'(?P<url>[a-zA-Z0-9\:\-\.\/\%]{0,})\'\, \'[a-z]{2,3}\'\)/";
+					$regex = "/\, \'home\'\, \'(?P<url>[a-zA-Z0-9\:\-\.\/\%\~]{0,})\'\, \'[a-z]{2,3}\'\)/";
 					preg_match($regex, $line, $matches);
 					if(isset($matches['url'])) $originalUrl = $matches['url'];
 				}
