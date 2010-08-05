@@ -242,8 +242,8 @@ class WPProjectCreator(object):
 			
 			print('cd wordpress')
 			print('rm -rf wp-content')
-			print('git clone %s' % self.remote)
-			print('mv %s wp-content' % self.projectName)
+			print('git clone %s wp-content' % self.remote)
+			#print('mv %s wp-content' % self.projectName)
 			
 			question = 'Run commands? [y/n]'
 			try:
@@ -255,9 +255,9 @@ class WPProjectCreator(object):
 				os.chdir(os.path.join(self.dir, 'wordpress'))
 				#os.system('rm -rf wp-content')
 				shutil.rmtree(os.path.join(self.dir, 'wordpress/wp-content'))
-				os.system('git clone %s' % self.remote)
+				os.system('git clone %s wp-content' % self.remote)
 				#os.system('mv %s wp-content' % self.projectName)
-				os.rename(os.path.join(self.dir, 'wordpress/%s' % self.projectName), os.path.join(self.dir, 'wordpress/wp-content'))
+				#os.rename(os.path.join(self.dir, 'wordpress/%s' % self.projectName), os.path.join(self.dir, 'wordpress/wp-content'))
 				return True
 			else:
 				self.throwError('error', 'Project creation aborted')
