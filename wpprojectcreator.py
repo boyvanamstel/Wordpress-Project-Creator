@@ -215,7 +215,7 @@ class WPProjectCreator(object):
 				confirm = input(question)
 			
 			if(confirm == 'y'):
-				os.chdir(os.path.join(self.dir, 'wordpress/wp-content'))
+				os.chdir(os.path.join(self.dir, 'wordpress', 'wp-content'))
 				os.system('git init')
 				os.system('git add .')
 				os.system('git commit -m "initial import"')
@@ -254,7 +254,7 @@ class WPProjectCreator(object):
 			if(confirm == 'y'):
 				os.chdir(os.path.join(self.dir, 'wordpress'))
 				#os.system('rm -rf wp-content')
-				shutil.rmtree(os.path.join(self.dir, 'wordpress/wp-content'))
+				shutil.rmtree(os.path.join(self.dir, 'wordpress', 'wp-content'))
 				os.system('git clone %s wp-content' % self.remote)
 				#os.system('mv %s wp-content' % self.projectName)
 				#os.rename(os.path.join(self.dir, 'wordpress/%s' % self.projectName), os.path.join(self.dir, 'wordpress/wp-content'))
