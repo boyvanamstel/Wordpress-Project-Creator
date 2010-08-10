@@ -274,7 +274,7 @@ def main():
 		args = sys.argv
 		opts, args = getopt.getopt(args[1:], 'd:n:r:', ['dir=','new=','remote=']) 
 	except getopt.GetoptError:           
-		print('usage: python wpprojectcreator.py [--dir] [--username] [--password] [--key] [--id]\n')
+		print('usage: python wpprojectcreator.py [--dir] [--new] [--remote]\n')
 		print('-d, --dir')
 		print('		Directory to create the project in [.]')
 		print('-n, --new')
@@ -295,7 +295,7 @@ def main():
 		if(o == '-r' or o == '--remote'):
 			remote = a
 
-	projectLister = WPProjectCreator(dir, new, remote)
+	projectCreator = WPProjectCreator(dir, new, remote)
 	
 # Run main
 if(__name__ == '__main__'):
