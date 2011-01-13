@@ -48,7 +48,7 @@ Adding new developers to your project is as easy as allowing them access to the 
  
 10. All set.
 
-11. To sync the project after a new dump.sql has been added, follow the guide to continue an existing project, starting at step 8.
+11. To sync the project after a new dump.sql has been added, follow the guide to continue an existing project, starting at step 7.
 
 ## Continue an existing project
 
