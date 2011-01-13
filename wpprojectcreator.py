@@ -195,7 +195,7 @@ class WPProjectCreator(object):
 				self.getGitLocation()
 			
 			self.projectName = inputRemoteProject
-			self.remote = 'git@%s:%s.git' % (inputRemoteHost, inputRemoteProject)
+			self.remote = 'git@%s:%s' % (inputRemoteHost, inputRemoteProject)
 			
 			return True
 		
