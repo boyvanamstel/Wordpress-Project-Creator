@@ -24,7 +24,7 @@ import shutil
 # Project creator class
 class WPProjectCreator(object):
 
-	def __init__(self, dir = None, new = 'n', remote = None):
+	def __init__(self, dir = None, new = None, remote = None):
 		
 		# Set current directory
 		if(dir == None):
@@ -50,7 +50,7 @@ class WPProjectCreator(object):
 		self.getGitLocation()
 		
 		# Run initial commands if new
-		if(self.new == 'y'):
+		if(self.new != None):
 			self.createGitRepo()
 		else:
 			self.getGitRepo()
@@ -168,16 +168,21 @@ class WPProjectCreator(object):
 			except:
 				inputRemoteProject = input(question)
 			
+			# Append .git if it's missing
+			inputRemoteLen = len(inputRemoteProject)
+			if(inputRemoteProject.find('.git', inputRemoteLen - len('.git'), inputRemoteLen) == -1):
+				inputRemoteProject = '%s.git' % inputRemoteProject
+			
 			# Define patterns
 			patHostname = re.compile('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])$', re.I)
-			patProject = re.compile('^[a-z\-]{0,}$', re.I)
+			patProject = re.compile('^[a-z0-9\-\_\.]{0,}$', re.I)
 
 			# Stuff to get
 			mHostname = patHostname.match(inputRemoteHost)
 			mProject = patProject.match(inputRemoteProject)
 			
 			if(mHostname and mProject):
-				question = 'We\'ll use this remote: git@%s:%s.git [y/n]' % (inputRemoteHost, inputRemoteProject)
+				question = 'We\'ll use this remote: git@%s:%s [y/n]' % (inputRemoteHost, inputRemoteProject)
 				try:
 					inputConfirm = raw_input(question)
 				except:
@@ -272,13 +277,13 @@ class WPProjectCreator(object):
 def main():
 	try:                     
 		args = sys.argv
-		opts, args = getopt.getopt(args[1:], 'd:n:r:', ['dir=','new=','remote=']) 
+		opts, args = getopt.getopt(args[1:], 'd:nr:', ['dir=','new=','remote=']) 
 	except getopt.GetoptError:           
-		print('usage: python wpprojectcreator.py [--dir] [--new] [--remote]\n')
+		print('usage: python wpprojectcreator.py [--dir /path] [--new] [--remote git@git.hostname.nl:example.git]\n')
 		print('-d, --dir')
 		print('		Directory to create the project in [.]')
 		print('-n, --new')
-		print('		Indicate this is an new project [n]')
+		print('		Indicate this is an new project')
 		print('-r, --remote')
 		print('		Remote location [git@git.hostname.nl:example.git]')
 		print('')
