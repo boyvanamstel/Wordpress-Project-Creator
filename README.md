@@ -2,7 +2,7 @@
 
 This tool contains a Python and PHP script to streamline working on Wordpress projects from your development machine.
 
-Instead of editing files on your FTP server, wpprojectcreator allows you to work on a Git repo containing your wp-content folder using applications like MAMP.
+Instead of editing files on your FTP server, wpprojectcreator allows you to easily work locally using an application like Mamp. By using Git to store your wp-content folder and a script to import database dumps, wprojectcreator makes it very easy to work together on the same Wordpress project.
 
 > Notice: works well on OSX and Linux, works partially on Windows.
 
