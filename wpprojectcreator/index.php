@@ -12,9 +12,6 @@
 <script src="js/jquery.js" type="text/javascript"></script>
 <script src="js/modernizr.js" type="text/javascript"></script>
 
-<script src="js/config.js" type="text/javascript"></script>
-<script src="js/scripts.js" type="text/javascript"></script>
-
 </head>
 
 <body id="index" class="home">
