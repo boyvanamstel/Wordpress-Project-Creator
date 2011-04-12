@@ -79,11 +79,13 @@ Adding new developers to your project is as easy as allowing them access to the 
 
 10. Press the link to 'website' and you're done.
 
-## Include the [HTML5 Boilerplate theme](http://wordpress.org/extend/themes/boilerplate)
+## Include the HTML5 Boilerplate theme
 
 To automatically download and extract the latest version of the HTML5 Boilerplate theme into your themes folder append -b to the command.
 
     $ python wpprojectcreator.py -b
+
+HTML5 Boilerplate theme page on Wordpress.org: http://wordpress.org/extend/themes/boilerplate
 
 # Notice
 
