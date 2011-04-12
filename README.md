@@ -85,7 +85,7 @@ To automatically download and extract the latest version of the HTML5 Boilerplat
 
     $ python wpprojectcreator.py -b
 
-HTML5 Boilerplate theme page on Wordpress.org: http://wordpress.org/extend/themes/boilerplate
+[HTML5 Boilerplate theme page on Wordpress.org](http://wordpress.org/extend/themes/boilerplate)
 
 # Notice
 
