@@ -12,5 +12,9 @@ shift
 # Clone wpprojectcreator
 git clone git://github.com/boyvanamstel/Wordpress-Project-Creator.git .
 
+# Remove the .git folder and .gitignore
+rm -rf .git
+rm .gitignore
+
 # Run it with parameters
 python wpprojectcreator.py $@
