@@ -129,7 +129,7 @@ class WPProjectCreator {
 		$url = $this->_settings['wp_url'];
 
         // Check if File exists
-        if(!file_exists($lines)) { 
+        if(!file_exists($file)) { 
 			$this->_errors[] = sprintf('Can not open file \'%s\'', $file); 
 			return false; 
 		} 
