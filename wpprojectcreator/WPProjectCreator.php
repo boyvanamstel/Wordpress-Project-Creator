@@ -73,7 +73,7 @@ class WPProjectCreator {
 	 */
 	public function createDBConnection() {
 		if($this->_link = mysql_connect($this->_settings['db_host'], $this->_settings['db_username'], $this->_settings['db_password'])) {
-			return true;
+            return true;
 		}
 		return false;
 	}
@@ -90,7 +90,7 @@ class WPProjectCreator {
 		
 		// Check if database exists, if not create it, else drop tables
 		if(!mysql_select_db($dbName, $link)) { 
-			// Create database
+            // Create database
 			$result = mysql_query(sprintf("CREATE DATABASE %s", $dbName), $link); 
 			if(!$result) { 
 				$this->_errors[] = sprintf('Could not create database %s', $dbName);
@@ -103,13 +103,11 @@ class WPProjectCreator {
 		} else {
 			// Select database
 			mysql_select_db($dbName);
-			
 			// Drop tables
 			$succeeded = true;
 			$results = mysql_query(sprintf('SHOW TABLES FROM %s', $dbName), $link);
 			while($row = @mysql_fetch_assoc($results)) { 
-
-				if(!mysql_query(sprintf('DROP TABLE %s', $row[sprintf('Tables_in_%s', $dbName)]))) {
+                if(!mysql_query(sprintf('DROP TABLE %s', $row[sprintf('Tables_in_%s', $dbName)]))) {
 					$this->_errors[] = sprintf('Failed to drop tables in %s: %s', $dbName, mysql_error());
 					$succeeded = false;
 					break;
@@ -129,22 +127,22 @@ class WPProjectCreator {
 		$file = $this->_settings['db_dump'];
 		$link = $this->_link;
 		$url = $this->_settings['wp_url'];
-		
-		// Read database dump
-		$lines = @file($file); 
-		
-		if(!$lines) { 
+
+        // Check if File exists
+        if(!file_exists($file)) { 
 			$this->_errors[] = sprintf('Can not open file \'%s\'', $file); 
 			return false; 
 		} 
-		
+
+        // Read database dump per line, for larger files
+        $dump = fopen ($file, "r");
+
 		// Strip comments and create single line
 		$query = '';
 		$queries = array();
-		$originalUrl = '';
-		foreach($lines as $line) { 
+        $originalUrl = '';
+        while ($line= fgets ($dump)) {
 			$line = trim($line); 
-			
 			// Strip comments
 			if(!preg_match('/^--/', $line)) { 
 				// Find original url, or replace if already found
@@ -161,8 +159,8 @@ class WPProjectCreator {
 				}
 			}
 	
-		} 
-		
+        }
+        fclose ($dump); 
 		// Return error if the file is empty
 		if(count($queries) == 0) { 
 			$this->_errors[] = sprintf('File \'%s\' seems to be empty', $file); 
@@ -171,14 +169,12 @@ class WPProjectCreator {
 		
 		// Run every line as a query
 		foreach($queries as $query) { 
-			//$query = trim($query);
-			if($query == "") { continue; }
+            if($query == "") { continue; }
 			if(!mysql_query(str_replace($originalUrl, $url, $query).';', $link)) {
 				$this->_errors[] = sprintf('Query \'%s\' failed: %s', $query, mysql_error());
 				return false; 
 			} 
 		} 
-		
 		// Operation succeeded
 		return true; 		
 
